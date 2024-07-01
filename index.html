@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Loja Virtual</title>
     <style>
-
-
         body {
             font-family: Arial, sans-serif;
             background-color: #fff8dc; /* Amarelo claro */
@@ -19,6 +17,7 @@
             color: white;
             text-align: center;
             padding: 1rem;
+            position: relative;
         }
         .container {
             width: 80%;
@@ -26,10 +25,14 @@
             overflow: hidden;
             padding: 20px;
         }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
         .product {
-            float: left;
-            width: 30%;
-            margin: 1.5%;
+            flex: 1 1 calc(33.333% - 1rem);
+            margin: 0.5rem;
             background: #fff;
             padding: 20px;
             border-radius: 10px; /* Borda arredondada */
@@ -87,6 +90,10 @@
             text-align: center;
             margin-bottom: 30px; /* Mais espaço entre o menu e o conteúdo */
             margin-top: 30px; /* Mais espaço do topo */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
         }
         .tabs button {
             background-color: #dc143c; /* Vermelho escuro */
@@ -96,7 +103,7 @@
             cursor: pointer;
             border-radius: 20px; /* Borda arredondada */
             transition: background-color 0.3s ease;
-            margin-right: 20px; /* Espaço entre os botões */
+            margin-bottom: 10px; /* Espaço entre os botões */
         }
         .tabs button:hover {
             background-color: #ff6347; /* Vermelho coral ao passar o mouse */
@@ -159,7 +166,7 @@
             display: none;
         }
         .cart-toggle-btn {
-            position: fixed;
+            position: absolute;
             top: 10px;
             right: 10px;
             background-color: #dc143c; /* Vermelho escuro */
@@ -175,207 +182,336 @@
         .cart-toggle-btn:hover {
             background-color: #ff6347; /* Vermelho coral ao passar o mouse */
         }
+        .cart-close-btn {
+            display: block;
+            width: 100%;
+            background-color: #dc143c; /* Vermelho escuro */
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .cart-close-btn:hover {
+            background-color: #ff6347; /* Vermelho coral ao passar o mouse */
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .product {
+                flex: 1 1 calc(50% - 1rem);
+            }
+            .tabs {
+                flex-direction: column;
+            }
+            .tabs button {
+                width: 100%;
+                margin-right: 0;
+            }
+            .cart-toggle-btn {
+                position: static;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+                width: calc(100% - 20px);
+                text-align: center;
+            }
+        }
+        @media (max-width: 480px) {
+            .product {
+                flex: 1 1 100%;
+            }
+            .tabs {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .tabs button {
+                width: 100%;
+                margin-right: 0;
+                padding: 10px;
+            }
+            .cart-toggle-btn {
+                position: static;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+                width: calc(100% - 20px);
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Minha Loja Virtual</h1>
+        <button class="cart-toggle-btn" onclick="toggleCart()">Carrinho</button>
     </header>
     <div class="tabs">
-        <button class="tablink active" onclick="openTab('Inicio')">Início</button>
-        <button class="tablink" onclick="openTab('Mercearia')">Mercearia</button>
-        <button class="tablink" onclick="openTab('Bebidas')">Bebidas</button>
-        <button class="tablink" onclick="openTab('Limpeza')">Limpeza</button>
+        <button class="tablink active" onclick="openTab(event, 'tabInicio')">Início</button>
+        <button class="tablink" onclick="openTab(event, 'tabMercearia')">Mercearia</button>
+        <button class="tablink" onclick="openTab(event, 'tabBebidas')">Bebidas</button>
+        <button class="tablink" onclick="openTab(event, 'tabLimpeza')">Limpeza</button>
     </div>
 
     <div id="tabInicio" class="tab-content active container">
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Refrigerante" alt="Refrigerante">
-            <h3>Refrigerante</h3>
-            <p>Descrição do refrigerante e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 5.00</span>
-                <a href="#" class="btn" onclick="addToCart('Refrigerante', 5.00)">Comprar</a>
+        <div class="products">
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Refrigerante" alt="Refrigerante">
+                <h3>Refrigerante</h3>
+                <p>Descrição do refrigerante e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 5.00</span>
+                    <button class="btn" onclick="addToCart('Refrigerante', 5.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
-        </div>
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Leite" alt="Leite">
-            <h3>Leite</h3>
-            <p>Descrição do leite e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 4.00</span>
-                <a href="#" class="btn" onclick="addToCart('Leite', 4.00)">Comprar</a>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Feijão" alt="Feijão">
+                <h3>Feijão</h3>
+                <p>Descrição do feijão e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 8.00</span>
+                    <button class="btn" onclick="addToCart('Feijão', 8.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
-        </div>
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=A%C3%A7%C3%BAcar" alt="Açúcar">
-            <h3>Açúcar</h3>
-            <p>Descrição do açúcar e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 3.00</span>
-                <a href="#" class="btn" onclick="addToCart('Açúcar', 3.00)">Comprar</a>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Detergente" alt="Detergente">
+                <h3>Detergente</h3>
+                <p>Descrição do detergente e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 3.00</span>
+                    <button class="btn" onclick="addToCart('Detergente', 3.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Leite" alt="Leite">
+                <h3>Leite</h3>
+                <p>Descrição do Leite e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 6.00</span>
+                    <button class="btn" onclick="addToCart('Leite', 3.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Açucar" alt="Açucar">
+                <h3>Açucar</h3>
+                <p>Descrição do Açucar e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 4.00</span>
+                    <button class="btn" onclick="addToCart('Açucar', 4.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+            <!-- Adicione mais produtos conforme necessário -->
         </div>
     </div>
 
     <div id="tabMercearia" class="tab-content container">
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Arroz" alt="Arroz">
-            <h3>Arroz</h3>
-            <p>Descrição do arroz e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 2.00</span>
-                <a href="#" class="btn" onclick="addToCart('Arroz', 2.00)">Comprar</a>
+        <div class="products">
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Arroz" alt="Arroz">
+                <h3>Arroz</h3>
+                <p>Descrição do arroz e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 10.00</span>
+                    <button class="btn" onclick="addToCart('Arroz', 10.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
-        </div>
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Feij%C3%A3o" alt="Feijão">
-            <h3>Feijão</h3>
-            <p>Descrição do feijão e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 3.50</span>
-                <a href="#" class="btn" onclick="addToCart('Feijão', 3.50)">Comprar</a>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Feijão" alt="Feijão">
+                <h3>Feijão</h3>
+                <p>Descrição do feijão e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 8.00</span>
+                    <button class="btn" onclick="addToCart('Feijão', 8.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
-        </div>
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Macarr%C3%A3o" alt="Macarrão">
-            <h3>Macarrão</h3>
-            <p>Descrição do macarrão e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 1.75</span>
-                <a href="#" class="btn" onclick="addToCart('Macarrão', 1.75)">Comprar</a>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Leite" alt="Leite">
+                <h3>Leite</h3>
+                <p>Descrição do Leite e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 6.00</span>
+                    <button class="btn" onclick="addToCart('Leite', 3.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Açucar" alt="Açucar">
+                <h3>Açucar</h3>
+                <p>Descrição do Açucar e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 4.00</span>
+                    <button class="btn" onclick="addToCart('Açucar', 4.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+            <!-- Adicione mais produtos conforme necessário -->
         </div>
     </div>
 
     <div id="tabBebidas" class="tab-content container">
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=%C3%81gua" alt="Água">
-            <h3>Água</h3>
-            <p>Descrição da água e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 1.00</span>
-                <a href="#" class="btn" onclick="addToCart('Água', 1.00)">Comprar</a>
+        <div class="products">
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Cerveja" alt="Cerveja">
+                <h3>Cerveja</h3>
+                <p>Descrição da cerveja e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 7.00</span>
+                    <button class="btn" onclick="addToCart('Cerveja', 7.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
-        </div>
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Suco" alt="Suco">
-            <h3>Suco</h3>
-            <p>Descrição do suco e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 2.50</span>
-                <a href="#" class="btn" onclick="addToCart('Suco', 2.50)">Comprar</a>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Energetico" alt="Energetico">
+                <h3>Energetico</h3>
+                <p>Descrição do Energetico e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 8.00</span>
+                    <button class="btn" onclick="addToCart('Energetico', 8.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
-        </div>
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Caf%C3%A9" alt="Café">
-            <h3>Café</h3>
-            <p>Descrição do café e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 6.00</span>
-                <a href="#" class="btn" onclick="addToCart('Café', 6.00)">Comprar</a>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Refrigerante" alt="Refrigerante">
+                <h3>refrigerante</h3>
+                <p>Descrição do refrigerante e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 8.00</span>
+                    <button class="btn" onclick="addToCart('Refrigerante', 8.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
+            <!-- Adicione mais produtos conforme necessário -->
         </div>
     </div>
 
     <div id="tabLimpeza" class="tab-content container">
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Detergente" alt="Detergente">
-            <h3>Detergente</h3>
-            <p>Descrição do detergente e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 1.50</span>
-                <a href="#" class="btn" onclick="addToCart('Detergente', 1.50)">Comprar</a>
+        <div class="products">
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Detergente" alt="Detergente">
+                <h3>Detergente</h3>
+                <p>Descrição do detergente e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 3.00</span>
+                    <button class="btn" onclick="addToCart('Detergente', 3.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
-        </div>
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Sab%C3%A3o+em+P%C3%B3" alt="Sabão em Pó">
-            <h3>Sabão em Pó</h3>
-            <p>Descrição do sabão em pó e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 4.00</span>
-                <a href="#" class="btn" onclick="addToCart('Sabão em Pó', 4.00)">Comprar</a>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Sabonete" alt="Sabonete">
+                <h3>Sabonete</h3>
+                <p>Descrição do sabonete e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 4.00</span>
+                    <button class="btn" onclick="addToCart('Sabonete', 4.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
-        </div>
-
-        <div class="product">
-            <img src="https://via.placeholder.com/300x200.png?text=Sab%C3%A3o+em+P%C3%B3" alt="Esponja">
-            <h3>Esponja</h3>
-            <p>Descrição da Esponja e detalhes.</p>
-            <div class="product-info">
-                <span class="price">R$ 4.50</span>
-                <a href="#" class="btn" onclick="addToCart('Esponja', 4.00)">Comprar</a>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Pasta de dente" alt="Pasta de dente">
+                <h3>Pasta de dente</h3>
+                <p>Descrição da Pasta de dente e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 7.00</span>
+                    <button class="btn" onclick="addToCart('Pasta de dente', 7.00)">Adicionar ao Carrinho</button>
+                </div>
             </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/300x200.png?text=Detergente" alt="Detergente">
+                <h3>Detergente</h3>
+                <p>Descrição do detergente e detalhes.</p>
+                <div class="product-info">
+                    <span class="price">R$ 3.00</span>
+                    <button class="btn" onclick="addToCart('Detergente', 3.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+            <!-- Adicione mais produtos conforme necessário -->
         </div>
-
     </div>
 
-    <button onclick="toggleCart()" class="cart-toggle-btn">Carrinho de Compras</button>
-
-    <div class="cart hidden">
-        <h2>Carrinho de Compras</h2>
-        <div id="cartItems"></div>
-        <p class="cart-total">Total: R$ <span id="cartTotal">0.00</span></p>
-        <button class="cart-btn" onclick="sendToWhatsApp()">Enviar para WhatsApp</button>
-        <p class="cart-message">Quando terminar a compra, clique no botão enviar para WhatsApp.</p>
+    <div class="cart hidden" id="cart">
+        <h2>Carrinho</h2>
+        <div id="cart-items"></div>
+        <div class="cart-total">
+            Total: R$ <span id="cart-total">0.00</span>
+        </div>
+        <button class="cart-btn" onclick="sendOrder()">Enviar Pedido pelo WhatsApp</button>
+        <button class="cart-close-btn" onclick="toggleCart()">Fechar Carrinho</button>
     </div>
 
     <footer>
-        <p>Minha Loja Virtual &copy; 2023</p>
+        <p>&copy; 2023 Minha Loja Virtual. Todos os direitos reservados.</p>
     </footer>
 
     <script>
-        function openTab(tabName) {
+        function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
             for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
             }
             tablinks = document.getElementsByClassName("tablink");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
-            document.getElementById("tab" + tabName).style.display = "block";
-            event.currentTarget.className += " active";
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.className += " active";
+        }
+
+        const cart = [];
+        
+        function addToCart(name, price) {
+            const itemIndex = cart.findIndex(item => item.name === name);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+            updateCart();
+        }
+
+        function removeFromCart(name) {
+            const itemIndex = cart.findIndex(item => item.name === name);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity -= 1;
+                if (cart[itemIndex].quantity === 0) {
+                    cart.splice(itemIndex, 1);
+                }
+                updateCart();
+            }
+        }
+
+        function updateCart() {
+            const cartItemsDiv = document.getElementById("cart-items");
+            cartItemsDiv.innerHTML = "";
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const cartItem = document.createElement("div");
+                cartItem.classList.add("cart-item");
+                cartItem.innerHTML = `
+                    <p>${item.name} (${item.quantity} x R$ ${item.price.toFixed(2)})</p>
+                    <button class="btn" onclick="removeFromCart('${item.name}')">Remover</button>
+                `;
+                cartItemsDiv.appendChild(cartItem);
+            });
+            document.getElementById("cart-total").textContent = total.toFixed(2);
         }
 
         function toggleCart() {
-            var cart = document.querySelector(".cart");
-            cart.classList.toggle("hidden");
+            const cartElement = document.getElementById("cart");
+            cartElement.classList.toggle("hidden");
         }
 
-        function addToCart(productName, productPrice) {
-            var cartItems = document.getElementById("cartItems");
-            var cartTotal = document.getElementById("cartTotal");
-            var item = document.createElement("div");
-            item.className = "cart-item";
-            item.innerHTML = "<p>" + productName + "</p><p>R$ " + productPrice.toFixed(2) + "</p>";
-            cartItems.appendChild(item);
-
-            var total = parseFloat(cartTotal.innerText);
-            total += productPrice;
-            cartTotal.innerText = total.toFixed(2);
+        function sendOrder() {
+            const whatsappNumber = '5519981048238'; // Número do WhatsApp com código do país e DDD
+            let message = 'Pedido:\n';
+            cart.forEach(item => {
+                message += `${item.name} (${item.quantity} x R$ ${item.price.toFixed(2)})\n`;
+            });
+            const total = document.getElementById("cart-total").textContent;
+            message += `Total: R$ ${total}`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
         }
-
-        function sendToWhatsApp() {
-            var cartItems = document.getElementById("cartItems").children;
-            var cartTotal = document.getElementById("cartTotal").innerText;
-            var message = "Lista de Compras:\n";
-
-            for (var i = 0; i < cartItems.length; i++) {
-                var item = cartItems[i].children;
-                message += "- " + item[0].innerText + ": R$ " + item[1].innerText + "\n";
-            }
-            message += "Total: R$ " + cartTotal;
-
-            var phoneNumber = "5519981048238"; // Coloque o número de telefone desejado aqui
-            var whatsappUrl = "https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + encodeURIComponent(message);
-            window.open(whatsappUrl, "_blank");
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            openTab('Inicio');
-        });
     </script>
 </body>
 </html>
